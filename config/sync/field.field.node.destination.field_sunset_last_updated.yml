@@ -1,0 +1,21 @@
+uuid: 660b76e5-5912-4821-9f4e-8e08d6f16953
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_sunset_last_updated
+    - node.type.destination
+  module:
+    - datetime
+id: node.destination.field_sunset_last_updated
+field_name: field_sunset_last_updated
+entity_type: node
+bundle: destination
+label: 'Sunset Last Updated'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

@@ -1,0 +1,20 @@
+uuid: 899b7f90-0be7-4f14-8bda-6948cac63f66
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - node.type.sunset
+  module:
+    - user
+id: node.sunset.teaser
+targetEntityType: node
+bundle: sunset
+mode: teaser
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden: {  }

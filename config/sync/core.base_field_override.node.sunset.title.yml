@@ -1,0 +1,18 @@
+uuid: 87bbd5e6-fd69-4db1-bea1-61da2fb21d95
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.sunset
+id: node.sunset.title
+field_name: title
+entity_type: node
+bundle: sunset
+label: Sunset
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

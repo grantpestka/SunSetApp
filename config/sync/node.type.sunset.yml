@@ -1,0 +1,18 @@
+uuid: f9ccbe38-1e54-46a8-89d9-144bbe5331f0
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:standard.front_page'
+name: Sunset
+type: sunset
+description: 'Sunrises and Sunsets'
+help: ''
+new_revision: true
+preview_mode: 2
+display_submitted: false

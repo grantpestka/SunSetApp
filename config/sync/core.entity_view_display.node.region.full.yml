@@ -1,0 +1,29 @@
+uuid: b48b06b4-f844-4883-908f-0dee78f411b2
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.full
+    - field.field.node.region.body
+    - node.type.region
+  module:
+    - text
+    - user
+id: node.region.full
+targetEntityType: node
+bundle: region
+mode: full
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 101
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden: {  }

@@ -1,0 +1,23 @@
+uuid: 0208447d-f85a-4a09-a961-b907f2edb8c9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_sunset_temp
+    - node.type.destination
+id: node.destination.field_sunset_temp
+field_name: field_sunset_temp
+entity_type: node
+bundle: destination
+label: 'Sunset Temp'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: float

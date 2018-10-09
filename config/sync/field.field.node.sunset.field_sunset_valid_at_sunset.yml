@@ -1,0 +1,21 @@
+uuid: df43f82e-84fb-4c81-8200-9d5da127da5b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_sunset_valid_at_sunset
+    - node.type.sunset
+  module:
+    - datetime
+id: node.sunset.field_sunset_valid_at_sunset
+field_name: field_sunset_valid_at_sunset
+entity_type: node
+bundle: sunset
+label: 'Sunset Valid At'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

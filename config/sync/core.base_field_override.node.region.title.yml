@@ -1,0 +1,18 @@
+uuid: 5f9706f6-feb8-4fe2-a8ef-7ab9223ef7e3
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.region
+id: node.region.title
+field_name: title
+entity_type: node
+bundle: region
+label: Name
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -1,0 +1,18 @@
+uuid: 257da932-2a34-4400-b62b-2adade1e1ecf
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.destination
+id: node.destination.title
+field_name: title
+entity_type: node
+bundle: destination
+label: Destination
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

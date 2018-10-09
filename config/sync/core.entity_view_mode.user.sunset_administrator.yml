@@ -1,0 +1,10 @@
+uuid: 706de234-289b-4566-82e3-6cc50499b5ea
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: user.sunset_administrator
+label: 'Sunset Administrator'
+targetEntityType: user
+cache: true

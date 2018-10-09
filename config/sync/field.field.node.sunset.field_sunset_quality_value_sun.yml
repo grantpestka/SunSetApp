@@ -1,0 +1,23 @@
+uuid: c33b85e0-e659-4b0a-9e99-982a48c52852
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_sunset_quality_value_sun
+    - node.type.sunset
+id: node.sunset.field_sunset_quality_value_sun
+field_name: field_sunset_quality_value_sun
+entity_type: node
+bundle: sunset
+label: 'Sunset Quality Value'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: float

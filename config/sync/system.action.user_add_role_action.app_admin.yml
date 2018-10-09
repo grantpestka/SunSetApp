@@ -1,0 +1,14 @@
+uuid: 8c4a403f-6b02-4f46-a92d-2f3cbaad28b3
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.app_admin
+  module:
+    - user
+id: user_add_role_action.app_admin
+label: 'Add the App Admin role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: app_admin

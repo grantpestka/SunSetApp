@@ -1,0 +1,28 @@
+uuid: 3c85a8de-3a7e-4f57-a01b-60841420ecfb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_region_sunmove
+    - node.type.destination
+    - node.type.sunset
+id: node.sunset.field_region_sunmove
+field_name: field_region_sunmove
+entity_type: node
+bundle: sunset
+label: Destination
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      destination: destination
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: destination
+field_type: entity_reference

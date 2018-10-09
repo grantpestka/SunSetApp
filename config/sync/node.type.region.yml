@@ -1,0 +1,18 @@
+uuid: 14357b54-f350-416a-9182-bc28cd3571f6
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
+name: Region
+type: region
+description: 'The geographical area containing a set of destinations'
+help: ''
+new_revision: true
+preview_mode: 2
+display_submitted: true

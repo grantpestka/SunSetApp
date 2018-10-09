@@ -1,0 +1,36 @@
+uuid: 69359f8e-7091-4d3c-bda1-e9bd58502f35
+langcode: en
+status: true
+dependencies: {  }
+id: app_admin
+label: 'App Admin'
+weight: 3
+is_admin: null
+permissions:
+  - 'access in-place editing'
+  - 'create destination content'
+  - 'create region content'
+  - 'create sunset content'
+  - 'delete any destination content'
+  - 'delete any region content'
+  - 'delete any sunset content'
+  - 'delete destination revisions'
+  - 'delete own destination content'
+  - 'delete own region content'
+  - 'delete own sunset content'
+  - 'delete region revisions'
+  - 'delete sunset revisions'
+  - 'edit any destination content'
+  - 'edit any region content'
+  - 'edit any sunset content'
+  - 'edit own destination content'
+  - 'edit own region content'
+  - 'edit own sunset content'
+  - 'revert destination revisions'
+  - 'revert region revisions'
+  - 'revert sunset revisions'
+  - 'search content'
+  - 'use advanced search'
+  - 'view destination revisions'
+  - 'view region revisions'
+  - 'view sunset revisions'

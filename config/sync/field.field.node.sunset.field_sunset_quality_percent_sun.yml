@@ -1,0 +1,23 @@
+uuid: 176edff2-113d-43b5-bf31-5761752fc446
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_sunset_quality_percent_sun
+    - node.type.sunset
+id: node.sunset.field_sunset_quality_percent_sun
+field_name: field_sunset_quality_percent_sun
+entity_type: node
+bundle: sunset
+label: 'Sunset Quality Percent'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: !!float 0
+  max: null
+  prefix: ''
+  suffix: '%'
+field_type: float
