@@ -1,15 +1,19 @@
-uuid: 1f84d630-4db7-4012-b856-e922393ce183
+uuid: c28644d3-9a0a-491f-a5c1-158e9b0abb4d
 langcode: en
 status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
-    - node.type.region
+    - node.type.destination
+    - user.role.administrator
+    - user.role.anonymous
+    - user.role.app_admin
+    - user.role.authenticated
   module:
     - node
     - user
-id: region
-label: Region
+id: destinations
+label: Destinations
 module: views
 description: ''
 tag: ''
@@ -24,9 +28,13 @@ display:
     position: 0
     display_options:
       access:
-        type: perm
+        type: role
         options:
-          perm: 'access content'
+          role:
+            anonymous: anonymous
+            authenticated: authenticated
+            administrator: administrator
+            app_admin: app_admin
       cache:
         type: tag
         options: {  }
@@ -137,7 +145,7 @@ display:
           table: node_field_data
           field: type
           value:
-            region: region
+            destination: destination
           entity_type: node
           entity_field: type
           plugin_id: bundle
@@ -157,7 +165,7 @@ display:
           expose:
             label: ''
           granularity: second
-      title: Region
+      title: Destinations
       header: {  }
       footer: {  }
       empty: {  }
@@ -171,7 +179,7 @@ display:
         - 'languages:language_interface'
         - url.query_args
         - 'user.node_grants:view'
-        - user.permissions
+        - user.roles
       tags: {  }
   block_1:
     display_plugin: block
@@ -180,7 +188,7 @@ display:
     position: 2
     display_options:
       display_extenders: {  }
-      block_category: 'Lists (Views)'
+      block_description: Destinations
     cache_metadata:
       max-age: -1
       contexts:
@@ -188,7 +196,7 @@ display:
         - 'languages:language_interface'
         - url.query_args
         - 'user.node_grants:view'
-        - user.permissions
+        - user.roles
       tags: {  }
   page_1:
     display_plugin: page
@@ -197,16 +205,7 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      path: node/region
-      menu:
-        type: tab
-        title: Region
-        description: ''
-        expanded: false
-        parent: ''
-        weight: 0
-        context: '0'
-        menu_name: main
+      path: destinations
     cache_metadata:
       max-age: -1
       contexts:
@@ -214,5 +213,5 @@ display:
         - 'languages:language_interface'
         - url.query_args
         - 'user.node_grants:view'
-        - user.permissions
+        - user.roles
       tags: {  }
