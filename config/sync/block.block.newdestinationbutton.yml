@@ -1,0 +1,31 @@
+uuid: fd6f0963-a910-4595-8e68-8e3729a45bd7
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:66bec5ef-7268-4532-ba10-0b8b9d05391e'
+  module:
+    - block_content
+    - system
+  theme:
+    - bartik
+id: newdestinationbutton
+theme: bartik
+region: content
+weight: 0
+provider: null
+plugin: 'block_content:66bec5ef-7268-4532-ba10-0b8b9d05391e'
+settings:
+  id: 'block_content:66bec5ef-7268-4532-ba10-0b8b9d05391e'
+  label: 'New Destination Button'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: /node/1
+    negate: false
+    context_mapping: {  }
