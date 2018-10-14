@@ -1,0 +1,32 @@
+uuid: e1a0685d-69d0-418b-8d46-fd204ee36804
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.destinations
+  module:
+    - node
+    - views
+  theme:
+    - bartik
+id: views_block__destinations_block_1
+theme: bartik
+region: content
+weight: -1
+provider: null
+plugin: 'views_block:destinations-block_1'
+settings:
+  id: 'views_block:destinations-block_1'
+  label: ''
+  provider: views
+  label_display: visible
+  views_label: ''
+  items_per_page: none
+visibility:
+  node_type:
+    id: node_type
+    bundles:
+      region: region
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'

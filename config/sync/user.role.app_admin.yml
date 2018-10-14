@@ -8,6 +8,13 @@ weight: 3
 is_admin: null
 permissions:
   - 'access in-place editing'
+  - 'access site-wide contact form'
+  - 'access user contact forms'
+  - 'access user profiles'
+  - 'administer contact forms'
+  - 'administer user display'
+  - 'administer user form display'
+  - 'administer users'
   - 'create destination content'
   - 'create region content'
   - 'create sunset content'
