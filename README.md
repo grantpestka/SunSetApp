@@ -145,17 +145,40 @@ To prevent this you can add this code to specify the PHP version you want to use
 Configuration Trouble Shooting
 
 CSS not loading
+-
 -vagrant ssh
 -cd /web/sites/default
 -chmod -R 777 files
 -drush cr
 
 NFS export is invalid
+-
 sudo /etc/exports
 -- make sure path is cd */repo && pwd
 
+No Drupal
+-
+drupal_build_composer: false
+drupal_build_composer_project: false
+err: fatal: [sunset]: FAILED! => {"changed": false, "msg": "No package matching 'php7.2-yaml' is available"}
+
+drupal_build_composer: true
+drupal_build_composer_project: false
+err: fatal: [sunset]: FAILED! => {"changed": false, "msg": "No package matching 'php7.2-yaml' is available"}
+
+drupal_build_composer: true
+drupal_build_composer_project: true
+err: fatal: [sunset]: FAILED! => {"changed": false, "msg": "No package matching 'php7.2-yaml' is available"}
+
+drupal_build_composer: false
+drupal_build_composer_project: true
+
+
 Repo not syncing
+-
+-git pull
 -vagrant ssh
 -composer install
+
 
 
