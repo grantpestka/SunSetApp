@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.destination.field_latitude_longitude
     - field.field.node.destination.field_region
     - field.field.node.destination.field_sunset_last_updated
     - field.field.node.destination.field_sunset_quality
@@ -13,12 +14,20 @@ dependencies:
     - node.type.destination
   module:
     - datetime
+    - geolocation
     - user
 id: node.destination.default
 targetEntityType: node
 bundle: destination
 mode: default
 content:
+  field_latitude_longitude:
+    weight: 108
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: geolocation_latlng
+    region: content
   field_region:
     weight: 102
     label: above
@@ -86,9 +95,14 @@ content:
     third_party_settings: {  }
     type: datetime_default
     region: content
-  links:
-    weight: 100
+  flag_subscribe:
+    weight: 10
+    region: content
     settings: {  }
     third_party_settings: {  }
+  links:
+    weight: 100
     region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden: {  }

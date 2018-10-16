@@ -1,0 +1,24 @@
+uuid: a5a5ab4e-84f2-4ff4-b500-dae883bb7a88
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_email_alert_opt_out
+  module:
+    - user
+id: user.user.field_email_alert_opt_out
+field_name: field_email_alert_opt_out
+entity_type: user
+bundle: user
+label: 'Email Alert Opt Out'
+description: 'Check this if you do not want to be notified about sunsets by email.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

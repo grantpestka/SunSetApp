@@ -1,8 +1,9 @@
-uuid: 362baf01-7a60-4c5b-beb0-586b6cb3e17a
+uuid: 198a7e73-7eeb-4768-936d-00f685445b2e
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.node.full
     - field.field.node.destination.field_latitude_longitude
     - field.field.node.destination.field_region
     - field.field.node.destination.field_sunset_last_updated
@@ -15,116 +16,94 @@ dependencies:
   module:
     - datetime
     - geolocation
-    - path
-id: node.destination.default
+    - user
+id: node.destination.full
 targetEntityType: node
 bundle: destination
-mode: default
+mode: full
 content:
-  created:
-    type: datetime_timestamp
-    weight: 10
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   field_latitude_longitude:
-    weight: 128
+    weight: 108
+    label: above
     settings: {  }
     third_party_settings: {  }
     type: geolocation_latlng
     region: content
   field_region:
-    weight: 122
+    weight: 102
+    label: above
     settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
+      link: true
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: entity_reference_label
     region: content
   field_sunset_last_updated:
-    weight: 126
-    settings: {  }
+    weight: 106
+    label: above
+    settings:
+      format_type: medium
+      timezone_override: ''
     third_party_settings: {  }
     type: datetime_default
     region: content
   field_sunset_quality:
-    weight: 121
+    weight: 101
+    label: above
     settings:
-      size: 60
-      placeholder: ''
+      link_to_entity: false
     third_party_settings: {  }
-    type: string_textfield
+    type: string
     region: content
   field_sunset_quality_percent:
-    weight: 123
+    weight: 103
+    label: above
     settings:
-      placeholder: ''
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
     third_party_settings: {  }
-    type: number
+    type: number_decimal
     region: content
   field_sunset_quality_value:
-    weight: 124
+    weight: 104
+    label: above
     settings:
-      placeholder: ''
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
     third_party_settings: {  }
-    type: number
+    type: number_decimal
     region: content
   field_sunset_temp:
-    weight: 125
+    weight: 105
+    label: above
     settings:
-      placeholder: ''
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
     third_party_settings: {  }
-    type: number
+    type: number_decimal
     region: content
   field_sunset_valid_at:
-    weight: 127
-    settings: {  }
+    weight: 107
+    label: above
+    settings:
+      format_type: medium
+      timezone_override: ''
     third_party_settings: {  }
     type: datetime_default
     region: content
-  path:
-    type: path
-    weight: 30
-    region: content
+  flag_subscribe:
+    weight: 10
     settings: {  }
     third_party_settings: {  }
-  promote:
-    type: boolean_checkbox
-    settings:
-      display_label: true
-    weight: 15
     region: content
+  links:
+    weight: 100
+    settings: {  }
     third_party_settings: {  }
-  status:
-    type: boolean_checkbox
-    settings:
-      display_label: true
-    weight: 120
     region: content
-    third_party_settings: {  }
-  sticky:
-    type: boolean_checkbox
-    settings:
-      display_label: true
-    weight: 16
-    region: content
-    third_party_settings: {  }
-  title:
-    type: string_textfield
-    weight: -5
-    region: content
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-  uid:
-    type: entity_reference_autocomplete
-    weight: 5
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-    region: content
-    third_party_settings: {  }
 hidden: {  }

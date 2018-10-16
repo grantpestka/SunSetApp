@@ -1,0 +1,21 @@
+uuid: ec9869f2-7760-47eb-a0c2-471873de85f7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_latitude_longitude
+    - node.type.destination
+  module:
+    - geolocation
+id: node.destination.field_latitude_longitude
+field_name: field_latitude_longitude
+entity_type: node
+bundle: destination
+label: 'Latitude / Longitude'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: geolocation

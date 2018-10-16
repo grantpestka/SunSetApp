@@ -1,0 +1,18 @@
+uuid: 0d124dea-16bc-4e75-b03d-60ac8e948b27
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: user.field_email_alert_opt_out
+field_name: field_email_alert_opt_out
+entity_type: user
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,21 @@
+uuid: 2113228f-9e37-44c4-9a76-711ac0cb7d17
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_mobile_phone
+  module:
+    - telephone
+    - user
+id: user.user.field_mobile_phone
+field_name: field_mobile_phone
+entity_type: user
+bundle: user
+label: 'Mobile Phone'
+description: 'Must be able to receive SMS messages.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: telephone

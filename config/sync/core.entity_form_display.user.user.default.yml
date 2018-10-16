@@ -3,10 +3,11 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.user.user.field_email_alert_opt_out
+    - field.field.user.user.field_mobile_phone
     - field.field.user.user.user_picture
-    - image.style.thumbnail
   module:
-    - image
+    - telephone
     - user
 _core:
   default_config_hash: K-1rBM8mTIkFp9RqOC2tMRUukOQ1xbRCfSKK8dEddnA
@@ -16,23 +17,26 @@ bundle: user
 mode: default
 content:
   account:
-    weight: -10
-    region: content
-  contact:
-    weight: 5
-    region: content
-  language:
     weight: 0
     region: content
-  timezone:
-    weight: 6
-    region: content
-  user_picture:
-    type: image_image
-    settings:
-      progress_indicator: throbber
-      preview_image_style: thumbnail
+    settings: {  }
     third_party_settings: {  }
-    weight: -1
+  field_email_alert_opt_out:
+    weight: 2
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
     region: content
-hidden: {  }
+  field_mobile_phone:
+    weight: 1
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: telephone_default
+    region: content
+hidden:
+  contact: true
+  language: true
+  timezone: true
+  user_picture: true

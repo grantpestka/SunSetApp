@@ -1,0 +1,13 @@
+uuid: 76998e96-459b-490f-8e1a-fa58d225d0ec
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+id: flag_action.subscribe.unflag
+label: Unsubscribe
+type: node
+plugin: 'flag_action:subscribe.unflag'
+configuration:
+  flag_id: subscribe
+  flag_action: unflag

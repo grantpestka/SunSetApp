@@ -1,0 +1,41 @@
+uuid: ad63a6d8-585c-4336-88ad-794916125548
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:8c265390-5753-477c-b2f2-9c2e82fc3e75'
+  module:
+    - block_content
+    - node
+    - user
+  theme:
+    - bartik
+id: loginorjoin
+theme: bartik
+region: content
+weight: 0
+provider: null
+plugin: 'block_content:8c265390-5753-477c-b2f2-9c2e82fc3e75'
+settings:
+  id: 'block_content:8c265390-5753-477c-b2f2-9c2e82fc3e75'
+  label: 'Log In or Join'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  node_type:
+    id: node_type
+    bundles:
+      destination: destination
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+  user_role:
+    id: user_role
+    roles:
+      anonymous: anonymous
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'

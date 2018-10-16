@@ -15,4 +15,4 @@ description: 'The geographical area containing a set of destinations'
 help: ''
 new_revision: true
 preview_mode: 2
-display_submitted: true
+display_submitted: false
