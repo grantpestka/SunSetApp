@@ -37,8 +37,8 @@ function sunburst_api_get_auth() {
 function sunburst_api_login() {
   $options = [
     'auth' => [
-      'joel@s-12.com',
-      'WY#76FMsunsetwxcom',
+      $username,
+      $password,
     ],
     'form_params' => [
       'grant_type' => 'password',
