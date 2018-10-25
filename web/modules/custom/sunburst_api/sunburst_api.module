@@ -37,8 +37,8 @@ function sunburst_api_get_auth() {
 function sunburst_api_login() {
   $options = [
     'auth' => [
-      '***REMOVED***',
-      '***REMOVED***',
+      $username,
+      $password,
     ],
     'form_params' => [
       'grant_type' => 'password',
