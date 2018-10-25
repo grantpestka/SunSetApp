@@ -1,0 +1,5 @@
+name: 'Sunburst API'
+type: module
+description: 'Handles API connection for https://sunburst.sunsetwx.com'
+core: 8.x
+package: 'Custom'
