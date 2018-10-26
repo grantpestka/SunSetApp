@@ -26,18 +26,18 @@ class SunburstClient implements SunburstClientInterface {
   protected $config;
 
   /**
-   * Sunburst Token.
+   * Sunburst Username.
    *
    * @var string
    */
-  protected $token;
+  protected $username;
 
   /**
-   * Sunburst Secret.
+   * Sunburst Password.
    *
    * @var string
    */
-  protected $secret;
+  protected $password;
 
   /**
    * Sunburst Base URI.
@@ -46,188 +46,50 @@ class SunburstClient implements SunburstClientInterface {
    */
   protected $base_uri;
 
-  // \/ \/ \/ \/ from initial testing \/ \/ \/ \/
-  $url = 'https://sunburst.sunsetwx.com/v1/login';
-
   /**
    * Constructor.
    */
   public function __construct(ClientInterface $http_client, KeyRepositoryInterface $key_repo, ConfigFactory $config_factory) {
     $this->httpClient = $http_client;
-    $config = $config_factory->get('Sunburst_api.settings');
-    $this->token = $config->get('token');
-    $this->secret = $config->get('secret');
-    $this->secret = $key_repo->getKey($this->secret)->getKeyValue();
+    $config = $config_factory->get('sunburst_api.settings');
+    $this->username = $config->get('username');
+    $this->username = $key_repo->getKey($this->username)->getKeyValue();
+    $this->password = $config->get('password');
+    $this->password = $key_repo->getKey($this->password)->getKeyValue();
     $this->base_uri = $config->get('base_uri');
   }
-
-  // \/ \/ \/ \/ from initial testing \/ \/ \/ \/
-  function sunburst_api_get_auth() {
-    if (!$params = sunburst_api_login()) {
-       return FALSE;
-    }
-  
-    if (!$accessToken =  sunburst_api_session_login($params)) {
-       return FALSE;
-    }
-    return $accessToken;
 
   /**
    * { @inheritdoc }
    */
-  public function connect($method, $endpoint, $query, $body) {
-    try {
-      $response = $this->httpClient->{$method}(
-        $this->base_uri . $endpoint,
-        $this->buildOptions($query, $body)
-      );
-    }
-    catch (RequestException $exception) {
-      drupal_set_message(t('Failed to complete Sunburst Task "%error"', ['%error' => $exception->getMessage()]), 'error');
+  public function getAccessToken() {
+    // TODO: Change to dependency injection.
+    $accessToken = \Drupal::state()->get('sunburst_api.access_token');
+    return $accessToken;
+  }
 
-      \Drupal::logger('Sunburst_api')->error('Failed to complete Sunburst Task "%error"', ['%error' => $exception->getMessage()]);
+  /**
+   * { @inheritdoc }
+   */
+  public function generateAccessToken() {
+    if (!$params = $this->login()) {
       return FALSE;
     }
 
-    $headers = $response->getHeaders();
-    $this->throttle($headers);
-    // TODO: Possibly allow returning the whole body.
-    return $response->getBody()->getContents();
-  }
-
-  // \/ \/ \/ \/ from initial testing \/ \/ \/ \/
-  function sunburst_api_login() {
-    $options = [
-      'auth' => [
-        $username,
-        $password,
-      ],
-      'form_params' => [
-        'grant_type' => 'password',
-        'type' => 'remember_me',
-      ],
-    ];
-  
-    $url = 'https://sunburst.sunsetwx.com/v1/login';
-
-    try {
-      $client = \Drupal::httpClient();
-      $response = $client->post($url, $options);
-      $contents = $response->getBody()->getContents();
-      if (empty($contents)) {
-        // Add log message.
-        return FALSE;
-      }
-  
-      $contents = json_decode($contents);
-      if (empty($contents->session)) {
-        return FALSE;
-      }
-      $params = [
-        'client_id' => $contents->session->client_id,
-        'client_secret' => $contents->session->client_secret,
-      ];
-      return $params;
-  
+    if (!$accessToken = $this->sessionlogin($params)) {
+      return FALSE;
     }
-    catch (RequestException $e) {
-      kint($e);
-    }
-  }
 
-  
-  }
-
-
-  /**
-   * Build options for the client.
-   */
-  private function buildOptions($query, $body) {
-    $options = [];
-    $options['auth'] = $this->auth();
-    if ($body) {
-      $options['body'] = $body;
-    }
-    if ($query) {
-      $options['query'] = $query;
-    }
-    return $options;
+    // Set access token.
+    \Drupal::state()->set('sunburst_api.access_token', $accessToken);
+    return $accessToken;
   }
 
   /**
-   * Throttle response.
-   *
-   * 100 per 60s allowed.
+   * { @inheritdoc }
    */
-  private function throttle($headers) {
-    if ($headers['X-Sunburst-API-Request-Rate-Count'][0] > 99) {
-      return sleep(60);
-    }
-    return TRUE;
-  }
-
-  /**
-   * Handle authentication.
-   */
-  private function auth() {
-    return [$this->token, $this->secret];
-  }
-
-  // \/ \/ \/ \/ from initial testing \/ \/ \/ \/
-  function sunburst_api_session_login($params) {
-    //curl -X "POST" "https://sunburst.sunsetwx.com/v1/login/session" -u "a3c5994b-58cf-4767-9b0a-2faf324da4ac:SeMzKSDtnO4WfN1uA1vVVGAYJB7FgMB3" -d "grant_type=client_credentials"Ȁ
-      $options = [
-        'auth' => [
-          $params['client_id'],
-          $params['client_secret'],
-        ],
-        'form_params' => [
-          'grant_type' => 'client_credentials',
-        ],
-      ];
-    
-      $url = 'https://sunburst.sunsetwx.com/v1/login/session';
-      try {
-        $client = \Drupal::httpClient();
-        $response = $client->post($url, $options);
-        $contents = $response->getBody()->getContents();
-        $contents = json_decode($contents);
-        return $contents->access_token;
-      }
-      catch (RequestException $e) {
-        kint($e);
-      }
-    }
-
-  /**
-   * Implements hook_help().
-   */
-  function sunburst_api_help($route_name, RouteMatchInterface $route_match) {
-    switch ($route_name) {
-      // Main module help for the sunburst_api module.
-      case 'help.page.sunburst_api':
-        $output = '';
-        $output .= '<h3>' . t('About') . '</h3>';
-        $output .= '<p>' . t('Handles API connection for https://sunburst.sunsetwx.com') . '</p>';
-        return $output;
-  
-      default:
-    }
-  }
-
-  // \/ \/ \/ \/ from initial testing \/ \/ \/ \/
-  foreach ($detinations as $destination) {
-    $data = sunburst_api_predictions($destination->latlon);
-    $values = parse_values($data);
-    $values->save();
-  
-  }
-  
-  // \/ \/ \/ \/ from initial testing \/ \/ \/ \/
-  function sunburst_api_predictions($latLong) {
-    $accessToken = sunburst_api_get_auth();
-  //   dpm($accessToken);
-  //   return;
+  public getPrediction($latLong) {
+    $accessToken = $this->getAccessToken();
     $options = [
       'headers' => [
         'Authorization' => 'Bearer ' . $accessToken,
@@ -236,16 +98,109 @@ class SunburstClient implements SunburstClientInterface {
         'geo' => $latLong,
       ],
     ];
-  
-    $url = 'https://sunburst.sunsetwx.com/v1/quality';
+
+    if (!$response = $this->connect('get', '/v1/quality', $options)) {
+      return FALSE;
+    }
+
+    //TODO...FAILURE...RETRY with new accessToken.
+  }
+
+  /**
+   * { @inheritdoc }
+   */
+  public function connect($method, $endpoint, $options) {
     try {
-      $client = \Drupal::httpClient();
-      $response = $client->get($url, $options);
-      dpm($response->getBody()->getContents());
+      $response = $this->httpClient->{$method}(
+        $this->base_uri . $endpoint,
+        $options
+      );
     }
-    catch (RequestException $e) {
-      kint($e);
+    catch (RequestException $exception) {
+      drupal_set_message(t('Failed to complete Sunburst Task "%error"', ['%error' => $exception->getMessage()]), 'error');
+      \Drupal::logger('Sunburst_api')->error('Failed to complete Sunburst Task "%error"', ['%error' => $exception->getMessage()]);
+      return FALSE;
     }
+    // $headers = $response->getHeaders();
+
+    return $response;
+  }
+
+  /**
+   * { @inheritdoc }
+   */
+  public function login() {
+    $options = [
+      'auth' => [
+        $this->username,
+        $this->password,
+      ],
+      'form_params' => [
+        'grant_type' => 'password',
+        'type' => 'remember_me',
+      ],
+    ];
+
+    if (!$response = $this->connect('post', '/v1/login', $options)) {
+      return FALSE;
+    }
+
+    if (!$contents = $this->getBody($response)) {
+      // TODO: Log here.
+      return FALSE;
+    }
+
+    if (empty($contents->session)) {
+      // TODO: Log here.
+      return FALSE;
+    }
+    $params = [
+      'client_id' => $contents->session->client_id,
+      'client_secret' => $contents->session->client_secret,
+    ];
+    return $params;
+  }
+
+  /**
+   * { @inheritdoc }
+   */
+  public function sessionLogin($params) {
+    $options = [
+      'auth' => [
+        $params['client_id'],
+        $params['client_secret'],
+      ],
+      'form_params' => [
+        'grant_type' => 'client_credentials',
+      ],
+    ];
+
+    if (!$response = $this->connect('post', '/v1/login/session', $options)) {
+      return FALSE;
+    }
+
+    if (!$contents = $this->getBody($response)) {
+      // TODO: Log here.
+      return FALSE;
+    }
+
+    if (empty($contents->access_token)) {
+      return FALSE;
+    }
+
+    return $contents->access_token;
+  }
+
+  /**
+   * { @inheritdoc }
+   */
+  public function getBody($response) {
+    $contents = $response->getBody()->getContents();
+    if (empty($contents)) {
+      return FALSE;
+    }
+
+    return json_decode($contents);
   }
 
 }

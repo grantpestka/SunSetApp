@@ -13,25 +13,25 @@ class ConfigForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->getConfig();
 
-    $form['token'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Sunburst API Token'),
-      '#default_value' => $config->get('token'),
-      '#description' => $this->t('Your Sunburst API token.'),
+    $form['username'] = [
+      '#type' => 'key_select',
+      '#title' => $this->t('Sunburst Username'),
+      '#default_value' => $config->get('username'),
+      '#description' => $this->t('Your Sunburst username stored in a Key.'),
+    ];
+
+    $form['password'] = [
+      '#type' => 'key_select',
+      '#title' => $this->t('Sunburst Password'),
+      '#default_value' => $config->get('password'),
+      '#description' => $this->t('Your Sunburst password stored in a Key.'),
     ];
 
     $form['base_uri'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Sunburst API Base URL'),
       '#default_value' => $config->get('base_uri'),
-      '#description' => $this->t('Include trailing slash.'),
-    ];
-
-    $form['secret'] = [
-      '#type' => 'key_select',
-      '#title' => $this->t('Sunburst API Secret'),
-      '#default_value' => $config->get('secret'),
-      '#description' => $this->t('Your Sunburst API secret.')
+      '#description' => $this->t('Exclude trailing slash.'),
     ];
 
     return parent::buildForm($form, $form_state);
