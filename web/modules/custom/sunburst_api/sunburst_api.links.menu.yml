@@ -1,0 +1,6 @@
+sunburst_api.settings:
+  title: 'Sunburst API Settings'
+  description: 'Sunburst API by SunsetWx.com settings'
+  parent: system.admin_config_services
+  route_name: sunburst_api.settings
+  weight: 100

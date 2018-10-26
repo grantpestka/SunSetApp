@@ -1,0 +1,7 @@
+pco_api.settings:
+  path: '/admin/config/sunburst-api'
+  defaults:
+    _form: '\Drupal\sunburst_api\Form\ConfigForm'
+    _title: 'Sunburst API by SunsetWx.com Settings'
+  requirements:
+    _permission: 'administer sunburst api'
