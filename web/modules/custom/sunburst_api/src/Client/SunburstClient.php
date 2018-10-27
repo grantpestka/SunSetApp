@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Sunburst_api\Client;
+namespace Drupal\sunburst_api\Client;
 
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\key\KeyRepositoryInterface;
@@ -44,7 +44,7 @@ class SunburstClient implements SunburstClientInterface {
    *
    * @var string
    */
-  protected $base_uri;
+  protected $baseUri;
 
   /**
    * Constructor.
@@ -56,40 +56,35 @@ class SunburstClient implements SunburstClientInterface {
     $this->username = $key_repo->getKey($this->username)->getKeyValue();
     $this->password = $config->get('password');
     $this->password = $key_repo->getKey($this->password)->getKeyValue();
-    $this->base_uri = $config->get('base_uri');
+    $this->baseUri = $config->get('base_uri');
   }
 
   /**
    * { @inheritdoc }
    */
-  public function getAccessToken() {
-    // TODO: Change to dependency injection.
-    $accessToken = \Drupal::state()->get('sunburst_api.access_token');
-    return $accessToken;
-  }
-
-  /**
-   * { @inheritdoc }
-   */
-  public function generateAccessToken() {
-    if (!$params = $this->login()) {
+  public function connect($method, $endpoint, $options) {
+    try {
+      $response = $this->httpClient->{$method}(
+        $this->baseUri . $endpoint,
+        $options
+      );
+    }
+    catch (RequestException $exception) {
+      drupal_set_message(t('Failed to complete Sunburst Task "%error"', ['%error' => $exception->getMessage()]), 'error');
+      \Drupal::logger('Sunburst_api')->error('Failed to complete Sunburst Task "%error"', ['%error' => $exception->getMessage()]);
       return FALSE;
     }
 
-    if (!$accessToken = $this->sessionlogin($params)) {
-      return FALSE;
-    }
-
-    // Set access token.
-    \Drupal::state()->set('sunburst_api.access_token', $accessToken);
-    return $accessToken;
+    return $response;
   }
 
   /**
    * { @inheritdoc }
    */
-  public getPrediction($latLong) {
-    $accessToken = $this->getAccessToken();
+  public function getPrediction($latLong, $accessToken = NULL) {
+    if (empty($accessToken)) {
+      $accessToken = $this->getAccessToken();
+    }
     $options = [
       'headers' => [
         'Authorization' => 'Bearer ' . $accessToken,
@@ -103,27 +98,21 @@ class SunburstClient implements SunburstClientInterface {
       return FALSE;
     }
 
-    //TODO...FAILURE...RETRY with new accessToken.
-  }
-
-  /**
-   * { @inheritdoc }
-   */
-  public function connect($method, $endpoint, $options) {
-    try {
-      $response = $this->httpClient->{$method}(
-        $this->base_uri . $endpoint,
-        $options
-      );
-    }
-    catch (RequestException $exception) {
-      drupal_set_message(t('Failed to complete Sunburst Task "%error"', ['%error' => $exception->getMessage()]), 'error');
-      \Drupal::logger('Sunburst_api')->error('Failed to complete Sunburst Task "%error"', ['%error' => $exception->getMessage()]);
+    if (!$contents = $this->getBody($response)) {
+      // TODO: Log here.
       return FALSE;
     }
-    // $headers = $response->getHeaders();
 
-    return $response;
+    // Check for Error Response.
+    if ($this->hasError($contents)) {
+      // Try with a new access token.
+      if ($accessToken = $this->generateAccessToken()) {
+        $this->getPrediction($latLong, $accessToken);
+        return FALSE;
+      }
+    }
+
+    return $contents;
   }
 
   /**
@@ -154,21 +143,56 @@ class SunburstClient implements SunburstClientInterface {
       // TODO: Log here.
       return FALSE;
     }
-    $params = [
+
+    $credentials = [
       'client_id' => $contents->session->client_id,
       'client_secret' => $contents->session->client_secret,
     ];
-    return $params;
+    foreach ($credentials as $key => $credential) {
+      \Drupal::state()->set('sunburst_api.' . $key, $credential);
+    }
+
+    return $credentials;
   }
 
   /**
    * { @inheritdoc }
    */
-  public function sessionLogin($params) {
+  public function getSessionTokens() {
+    $keys = [
+      'client_id',
+      'client_secret',
+    ];
+    $credentials = [];
+    foreach ($keys as $key) {
+      $credentials[$key] = \Drupal::state()->get('sunburst_api.' . $key);
+    }
+    return $credentials;
+  }
+
+  /**
+   * { @inheritdoc }
+   */
+  public function generateAccessToken() {
+    $credentials = $this->getSessionTokens();
+    if (!$accessToken = $this->sessionlogin($credentials)) {
+      // TODO: Logging?
+      return FALSE;
+    }
+
+    // Set access token.
+    \Drupal::state()->set('sunburst_api.access_token', $accessToken);
+    return $accessToken;
+  }
+
+  /**
+   * { @inheritdoc }
+   */
+  public function sessionLogin($credentials) {
     $options = [
       'auth' => [
-        $params['client_id'],
-        $params['client_secret'],
+        $credentials['client_id'],
+        $credentials['client_secret'],
       ],
       'form_params' => [
         'grant_type' => 'client_credentials',
@@ -184,7 +208,17 @@ class SunburstClient implements SunburstClientInterface {
       return FALSE;
     }
 
+    // Check for Error Response.
+    if ($this->hasError($contents)) {
+      // Need to re-login.
+      if ($credentials = $this->login()) {
+        $this->sessionLogin($credentials);
+        return FALSE;
+      }
+    }
+
     if (empty($contents->access_token)) {
+      // TODO: Log here.
       return FALSE;
     }
 
@@ -194,13 +228,43 @@ class SunburstClient implements SunburstClientInterface {
   /**
    * { @inheritdoc }
    */
-  public function getBody($response) {
+  public function getAccessToken() {
+    // TODO: Change to dependency injection.
+    $accessToken = \Drupal::state()->get('sunburst_api.access_token');
+    return $accessToken;
+  }
+
+  /**
+   * { @inheritdoc }
+   */
+  public function hasError($contents) {
+    if (!isset($contents->error)) {
+      return FALSE;
+    }
+
+    if ($contents->error === 'invalid_grant') {
+      return TRUE;
+    }
+    elseif ($contents->error === 'Unauthorized: invalid token') {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * { @inheritdoc }
+   */
+  public function getBody($response, $decoded = TRUE) {
     $contents = $response->getBody()->getContents();
     if (empty($contents)) {
       return FALSE;
     }
 
-    return json_decode($contents);
+    if ($decoded) {
+      return json_decode($contents);
+    }
+
+    return $contents;
   }
 
 }
