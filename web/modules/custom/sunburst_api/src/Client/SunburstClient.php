@@ -4,10 +4,9 @@ namespace Drupal\sunburst_api\Client;
 
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\key\KeyRepositoryInterface;
-use Drupal\Sunburst_api\SunburstClientInterface;
+use Drupal\sunburst_api\SunburstClientInterface;
 use \GuzzleHttp\ClientInterface;
 use \GuzzleHttp\Exception\RequestException;
-use Drupal\Core\Routing\RouteMatchInterface;
 
 class SunburstClient implements SunburstClientInterface {
 
@@ -63,6 +62,7 @@ class SunburstClient implements SunburstClientInterface {
    * { @inheritdoc }
    */
   public function connect($method, $endpoint, $options) {
+    $error = FALSE;
     try {
       $response = $this->httpClient->{$method}(
         $this->baseUri . $endpoint,
@@ -71,7 +71,31 @@ class SunburstClient implements SunburstClientInterface {
     }
     catch (RequestException $exception) {
       drupal_set_message(t('Failed to complete Sunburst Task "%error"', ['%error' => $exception->getMessage()]), 'error');
-      \Drupal::logger('Sunburst_api')->error('Failed to complete Sunburst Task "%error"', ['%error' => $exception->getMessage()]);
+      \Drupal::logger('sunburst_api')->notice('Failed to complete Sunburst Task "%error"', ['%error' => $exception->getMessage()]);
+
+      if (!$this->hasError($exception)) {
+        return FALSE;
+      }
+      $error = TRUE;
+    }
+
+    // Check for Error Response.
+    // TODO: Add counter to prevent loop.
+    if ($error) {
+      if (isset($options['headers']['Authorization'])) {
+        $options['headers']['Authorization'] = 'Bearer ' . $this->generateAccessToken();
+        return $this->connect($method, $endpoint, $options);
+      }
+      elseif (isset($options['auth'])) {
+        if (!$credentials = $this->login()) {
+          return FALSE;
+        }
+        $options['auth'] = [
+          $credentials['client_id'],
+          $credentials['client_secret'],
+        ];
+        return $this->connect($method, $endpoint, $options);
+      }
       return FALSE;
     }
 
@@ -81,13 +105,10 @@ class SunburstClient implements SunburstClientInterface {
   /**
    * { @inheritdoc }
    */
-  public function getPrediction($latLong, $accessToken = NULL) {
-    if (empty($accessToken)) {
-      $accessToken = $this->getAccessToken();
-    }
+  public function getQuality($latLong) {
     $options = [
       'headers' => [
-        'Authorization' => 'Bearer ' . $accessToken,
+        'Authorization' => 'Bearer ' . $this->getAccessToken(),
       ],
       'query' => [
         'geo' => $latLong,
@@ -101,15 +122,6 @@ class SunburstClient implements SunburstClientInterface {
     if (!$contents = $this->getBody($response)) {
       // TODO: Log here.
       return FALSE;
-    }
-
-    // Check for Error Response.
-    if ($this->hasError($contents)) {
-      // Try with a new access token.
-      if ($accessToken = $this->generateAccessToken()) {
-        $this->getPrediction($latLong, $accessToken);
-        return FALSE;
-      }
     }
 
     return $contents;
@@ -175,7 +187,7 @@ class SunburstClient implements SunburstClientInterface {
    */
   public function generateAccessToken() {
     $credentials = $this->getSessionTokens();
-    if (!$accessToken = $this->sessionlogin($credentials)) {
+    if (!$accessToken = $this->sessionLogin($credentials)) {
       // TODO: Logging?
       return FALSE;
     }
@@ -208,15 +220,6 @@ class SunburstClient implements SunburstClientInterface {
       return FALSE;
     }
 
-    // Check for Error Response.
-    if ($this->hasError($contents)) {
-      // Need to re-login.
-      if ($credentials = $this->login()) {
-        $this->sessionLogin($credentials);
-        return FALSE;
-      }
-    }
-
     if (empty($contents->access_token)) {
       // TODO: Log here.
       return FALSE;
@@ -237,7 +240,8 @@ class SunburstClient implements SunburstClientInterface {
   /**
    * { @inheritdoc }
    */
-  public function hasError($contents) {
+  public function hasError($exception) {
+    $contents = json_decode($exception->getResponse()->getBody());
     if (!isset($contents->error)) {
       return FALSE;
     }
