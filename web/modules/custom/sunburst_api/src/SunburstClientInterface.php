@@ -104,12 +104,10 @@ interface SunburstClientInterface {
    *
    * @param object $response
    *   \GuzzleHttp\Psr7\Response.
-   * @param bool $decoded
-   *   TRUE if you would like to json_decode the response.
    *
    * @return object
    *   \GuzzleHttp\Psr7\Response body or json_decoded version.
    */
-  public function getBody($response, $decoded = TRUE);
+  public function getBody($response);
 
 }

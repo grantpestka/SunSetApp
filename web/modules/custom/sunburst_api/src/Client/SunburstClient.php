@@ -119,7 +119,7 @@ class SunburstClient implements SunburstClientInterface {
       return FALSE;
     }
 
-    if (!$contents = $this->getBody($response)) {
+    if (!$contents = $this->getBody($response, TRUE)) {
       // TODO: Log here.
       return FALSE;
     }
@@ -258,17 +258,13 @@ class SunburstClient implements SunburstClientInterface {
   /**
    * { @inheritdoc }
    */
-  public function getBody($response, $decoded = TRUE) {
+  public function getBody($response) {
     $contents = $response->getBody()->getContents();
     if (empty($contents)) {
       return FALSE;
     }
 
-    if ($decoded) {
-      return json_decode($contents);
-    }
-
-    return $contents;
+    return json_decode($contents);
   }
 
 }
