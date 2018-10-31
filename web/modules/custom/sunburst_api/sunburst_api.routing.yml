@@ -1,4 +1,4 @@
-pco_api.settings:
+sunburst_api.settings:
   path: '/admin/config/sunburst-api'
   defaults:
     _form: '\Drupal\sunburst_api\Form\ConfigForm'
