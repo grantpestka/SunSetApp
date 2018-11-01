@@ -1,0 +1,5 @@
+name: 'Update Destinations'
+type: module
+description: 'Updates the sunset quality information each active Destination'
+core: 8.x
+package: 'Custom'

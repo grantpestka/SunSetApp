@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file
+ * Contains update_destinations.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function update_destinations_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the update_destinations module.
+    case 'help.page.update_destinations':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Updates the sunset quality information each active Destination') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function update_destinations_theme() {
+  return [
+    'update_destinations' => [
+      'render element' => 'children',
+    ],
+  ];
+}

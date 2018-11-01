@@ -78,7 +78,7 @@ class SunburstClient implements SunburstClientInterface {
       }
       $error = TRUE;
     }
-
+    
     // Check for Error Response.
     // TODO: Add counter to prevent loop.
     if ($error) {
