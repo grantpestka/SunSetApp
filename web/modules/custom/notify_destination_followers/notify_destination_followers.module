@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file
+ * Contains notify_destination_followers.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function notify_destination_followers_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the notify_destination_followers module.
+    case 'help.page.notify_destination_followers':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Notifies users who have elected to get notifications from a given destination') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function notify_destination_followers_theme() {
+  return [
+    'notify_destination_followers' => [
+      'render element' => 'children',
+    ],
+  ];
+}

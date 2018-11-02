@@ -1,0 +1,5 @@
+name: 'Notify Destination Followers'
+type: module
+description: 'Notifies users who have elected to get notifications from a given destination'
+core: 8.x
+package: 'Custom'
