@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Datetime\DrupalDateTime;
 
 /**
  * Implements hook_help().
@@ -24,12 +25,24 @@ function update_destinations_help($route_name, RouteMatchInterface $route_match)
 }
 
 /**
- * Implements hook_theme().
+ * Implements hook_cron().
  */
-function update_destinations_theme() {
-  return [
-    'update_destinations' => [
-      'render element' => 'children',
-    ],
-  ];
+function update_destinations_cron() {
+  $queue = Drupal::service('queue');
+  $storage = Drupal::getContainer()->get('entity_type.manager')->getStorage('node');
+
+  $now = new DrupalDateTime('now');
+  $destinations = $storage->getQuery()
+    ->condition('type', 'destination')
+    ->condition('status', 1)
+    ->condition('field_sunset_last_updated', $now->format('Y-m-d'), '<')
+    ->execute();
+
+  if (empty($destinations)) {
+    return;
+  }
+
+  foreach ($destinations as $destination) {
+    $queue->get('update_destinations_queue_worker')->createItem($destination);
+  }
 }
