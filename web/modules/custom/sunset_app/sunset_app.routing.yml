@@ -1,0 +1,8 @@
+
+sunset_app.front_controller_index:
+  path: '/front'
+  defaults:
+    _controller: '\Drupal\sunset_app\Controller\FrontController::index'
+    _title: 'index'
+  requirements:
+    _permission: 'access content'

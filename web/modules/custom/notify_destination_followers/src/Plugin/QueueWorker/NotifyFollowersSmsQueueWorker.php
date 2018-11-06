@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\update_destinations\Plugin\QueueWorker;
+namespace Drupal\notify_sms\Plugin\QueueWorker;
 
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;

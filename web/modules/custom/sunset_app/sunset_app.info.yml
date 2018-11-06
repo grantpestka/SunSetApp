@@ -1,0 +1,5 @@
+name: 'Sunset App'
+type: module
+description: 'the basic sunset module'
+core: 8.x
+package: 'Custom'
