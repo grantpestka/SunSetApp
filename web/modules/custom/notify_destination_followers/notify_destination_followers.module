@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Implements hook_help().
@@ -32,4 +33,84 @@ function notify_destination_followers_theme() {
       'render element' => 'children',
     ],
   ];
+}
+
+/**
+ * Implements hook_cron().
+ */
+//TODO:: pay attention to field_sunset_last_updated	
+function notify_destination_followers_cron() {
+  $queue_id = 'get_users_to_notify_queue_worker';
+  $queue = Drupal::queue($queue_id);
+  if ($queue->numberOfItems() != 0) {
+    return;
+  }
+
+  $storage = Drupal::getContainer()->get('entity_type.manager')->getStorage('node');
+  $destinations = $storage->getQuery()
+      ->condition('type', 'destination')
+      ->condition('status', 1)
+      // ->condition('field_threshold', '80', '>=')
+      ->execute();
+
+  foreach ($destinations as $destination) {
+    $queue->createItem($destination);
+  };    
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+function notify_destination_followers_flagging_presave(EntityInterface $entity) {
+  $uid = Drupal::currentUser()->id();
+  $storage = Drupal::getContainer()->get('entity_type.manager')->getStorage('user');
+  $user = $storage->load($uid);
+  if (!$user) {
+    return;
+  }
+  $sendSMS = 0;
+  if (!$user->field_mobile_phone->isEmpty()) {
+    $sendSMS = 1;
+  }
+  $entity->set('field_send_sms', $sendSMS);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function notify_destination_followers_user_update(EntityInterface $entity) {
+  if (!$flags = notify_destination_followers_get_users_flagged_destinations($entity->id())) {
+    return;
+  }
+
+  $sendSMS = 0;
+  if (!$entity->field_mobile_phone->isEmpty()) {
+    $sendSMS = 1;
+  }
+
+  foreach($flags as $flag) {
+    $flag->set('field_send_sms', $sendSMS);
+    $flag->save();
+  }
+}
+
+/**
+ * Gets a list of all of a users flagging entities.
+ * 
+ * @param int $uid
+ *   Drupal user id
+ * 
+ * @return mixed
+ *   FALSE if none, array of flagging objects.
+ */
+function notify_destination_followers_get_users_flagged_destinations($uid) {
+  $storage = Drupal::getContainer()->get('entity_type.manager')->getStorage('flagging');
+  $flags = $storage->loadByProperties([
+    'flag_id' => 'subscribe',
+    'uid' => $uid,
+  ]);
+  if (empty($flags)) {
+    return FALSE;
+  }
+  return $flags;
 }
