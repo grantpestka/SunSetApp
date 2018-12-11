@@ -1,4 +1,4 @@
 services:
   sunburst_api.client:
     class: '\Drupal\sunburst_api\Client\SunburstClient'
-    arguments: ['@http_client', '@key.repository', '@config.factory']
+    arguments: ['@http_client', '@key.repository', '@logger.factory', '@config.factory']

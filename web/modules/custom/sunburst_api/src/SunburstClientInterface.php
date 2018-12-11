@@ -31,13 +31,15 @@ interface SunburstClientInterface {
    *
    * API Docs: https://sunburst.sunsetwx.com/v1/docs/#get-quality.
    *
-   * @param string $latLong
-   *   A string that contains a commas seperated latitude and longitude point.
+   * @param string $geo
+   *   A string that contains a valid latitude and longitude point, with latitude and longitude values separated by a comma (RFC5870-formatted).
+   * @param array $params
+   *   Other non-required quality params.
    *
    * @return object
    *   \GuzzleHttp\Psr7\Response body.
    */
-  public function getQuality($latLong);
+  public function getQuality($geo, $params);
 
   /**
    * Initial login to get session credentials.

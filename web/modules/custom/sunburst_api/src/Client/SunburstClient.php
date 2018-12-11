@@ -4,6 +4,7 @@ namespace Drupal\sunburst_api\Client;
 
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\key\KeyRepositoryInterface;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\sunburst_api\SunburstClientInterface;
 use \GuzzleHttp\ClientInterface;
 use \GuzzleHttp\Exception\RequestException;
@@ -46,10 +47,18 @@ class SunburstClient implements SunburstClientInterface {
   protected $baseUri;
 
   /**
+   * Drupal\Core\Logger\LoggerChannelFactoryInterface definition.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   */
+  protected $logger;
+
+  /**
    * Constructor.
    */
-  public function __construct(ClientInterface $http_client, KeyRepositoryInterface $key_repo, ConfigFactory $config_factory) {
+  public function __construct(ClientInterface $http_client, KeyRepositoryInterface $key_repo, LoggerChannelFactoryInterface $logger_factory, ConfigFactory $config_factory) {
     $this->httpClient = $http_client;
+    $this->logger = $logger_factory->get('logger.factory');
     $config = $config_factory->get('sunburst_api.settings');
     $this->username = $config->get('username');
     $this->username = $key_repo->getKey($this->username)->getKeyValue();
@@ -70,8 +79,7 @@ class SunburstClient implements SunburstClientInterface {
       );
     }
     catch (RequestException $exception) {
-      drupal_set_message(t('Failed to complete Sunburst Task "%error"', ['%error' => $exception->getMessage()]), 'error');
-      \Drupal::logger('sunburst_api')->notice('Failed to complete Sunburst Task "%error"', ['%error' => $exception->getMessage()]);
+      $this->logger->notice('Failed to complete Sunburst Task "%error"', ['%error' => $exception->getMessage()]);
 
       if (!$this->hasError($exception)) {
         return FALSE;
@@ -105,23 +113,29 @@ class SunburstClient implements SunburstClientInterface {
   /**
    * { @inheritdoc }
    */
-  public function getQuality($latLong) {
+  public function getQuality($geo, $params = array()) {
     $options = [
       'headers' => [
         'Authorization' => 'Bearer ' . $this->getAccessToken(),
       ],
       'query' => [
-        'geo' => $latLong,
-        'type' => 'sunset',
+        'geo' => $geo,
       ],
     ];
+
+    // Add any additonal params passed through.
+    if (!empty($params)) {
+      foreach ($params as $paramKey => $paramValue) {
+        $options['query'][$paramKey] = $paramValue;
+      }
+    }
 
     if (!$response = $this->connect('get', '/v1/quality', $options)) {
       return FALSE;
     }
 
     if (!$contents = $this->getBody($response, TRUE)) {
-      // TODO: Log here.
+      $this->logger->notice('Get Quality could not be fetched for @geo', ['@geo' => $geo]);
       return FALSE;
     }
 
@@ -148,12 +162,12 @@ class SunburstClient implements SunburstClientInterface {
     }
 
     if (!$contents = $this->getBody($response)) {
-      // TODO: Log here.
+      $this->logger->notice('Failed to login to the suburst API.');
       return FALSE;
     }
 
     if (empty($contents->session)) {
-      // TODO: Log here.
+      $this->logger->notice('Suburst login successful but missing session.');
       return FALSE;
     }
 
@@ -189,7 +203,7 @@ class SunburstClient implements SunburstClientInterface {
   public function generateAccessToken() {
     $credentials = $this->getSessionTokens();
     if (!$accessToken = $this->sessionLogin($credentials)) {
-      // TODO: Logging?
+      $this->logger->notice('An access token could not be returned from the sunburst api.');
       return FALSE;
     }
 
@@ -217,12 +231,12 @@ class SunburstClient implements SunburstClientInterface {
     }
 
     if (!$contents = $this->getBody($response)) {
-      // TODO: Log here.
+      $this->logger->notice('Session Login failed.');
       return FALSE;
     }
 
     if (empty($contents->access_token)) {
-      // TODO: Log here.
+      $this->logger->notice('An access token was not returned from the sunburst api.');
       return FALSE;
     }
 
