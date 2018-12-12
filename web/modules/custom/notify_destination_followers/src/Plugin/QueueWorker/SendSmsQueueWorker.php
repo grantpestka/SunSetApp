@@ -117,9 +117,12 @@ class SendSmsQueueWorker extends QueueWorkerBase implements ContainerFactoryPlug
     $params = [
       'from' => $phone,
       'body' => $message,
+      //@Joel not sure what url to use
       'statusCallback' => $this->keyRepository->getKey('postb_url')->getKeyValue(),
     ];
+    //@Joel not sure what the 'dovneinn.env' equilivant is this 'sunset.test'
     if (\Drupal::state()->get('doveinn.env') === 'production') {
+      //@Joel what is the twilio_webhook_token 
       $token = $this->keyRepository->getKey('twilio_webhook_token')->getKeyValue();
       $params['statusCallback'] = Url::fromRoute('notify.twilio_webhook', ['token' => $token], ['absolute' => TRUE])->toString();
     }
@@ -127,7 +130,8 @@ class SendSmsQueueWorker extends QueueWorkerBase implements ContainerFactoryPlug
       $sms = $client->messages->create($sendTo, $params);
     }
     catch (RestException $e) {
-      \Drupal::logger('notify')->error('SMS sending issue with User: @user for Destination: @destination. @error status code.', ['@error' => $e->getStatusCode(), '@user' => $booking->id()]);
+      //need to match our log fromat??
+      \Drupal::logger('notify')->error('SMS sending issue with User: @user for Destination: @destination. @error status code.', ['@error' => $e->getStatusCode(), '@user' => $user_destination_pair->'uid'->name]);
       return FALSE;
     }
     $details = [
@@ -136,16 +140,17 @@ class SendSmsQueueWorker extends QueueWorkerBase implements ContainerFactoryPlug
       'message' => $message,
       'sid' => $sms->sid,
     ];
-    $this->createNotification($booking, $details);
+    $flagging = $user_destination_pair->'flagging'
+    $this->createNotification($flagging, $details);
     return TRUE;
   }
 
   /**
    * Create log node.
    */
-  public function createNotification($booking, $details) {
+  public function createNotification($flagging, $details) {
     $storage = $this->entityTypeManager->getStorage('node');
-    $values = $this->prepareNotificationNode($booking, $details);
+    $values = $this->prepareNotificationNode($flagging, $details);
     $node = $storage->create($values);
     $node->save();
   }
