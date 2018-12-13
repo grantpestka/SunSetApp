@@ -6,9 +6,10 @@ use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Queue\QueueWorkerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\notification\Utility\NotificationUtility;
 
 /**
- * Get a SMS to each user for every destination they are subscribed to.
+ * Send a SMS to each user for every destination they are subscribed to.
  *
  * @QueueWorker(
  *   id = "send_sms_queue_worker",
@@ -24,6 +25,13 @@ class SendSmsQueueWorker extends QueueWorkerBase implements ContainerFactoryPlug
    * @var \Drupal\Core\Entity\EntityTypeManager
    */
   protected $entityTypeManager;
+
+  /**
+   * Drupal\notify\Utility\NotificationUtility definition.
+   *
+   * @var \Drupal\notify\Utility\NotificationUtility
+   */
+  protected $notificationUtility;  
 
   protected $debug = FALSE;
 
@@ -62,10 +70,14 @@ class SendSmsQueueWorker extends QueueWorkerBase implements ContainerFactoryPlug
   /**
    * {@inheritdoc}
    */
-  public function processItem($user_destination_pair) {
-    $message = createMessage($user_destination_pair);
+  //@Joel  would better paramaters for this be $uid, $destination_id, $flagging_id
+   public function processItem($user_destination_flagging) {
+    $message = createMessage($user_destination_flagging);
     //need to load user??
-    $user_phone = $user_destination_pair->'uid'->field_mobile_phone;
+    $user_phone = $user_destination_flagging->'uid'->field_mobile_phone;
+
+
+   $this->$notificationUtility->sendSms($user_phone, $uid, $message, $log_parent);
     // die();
   }
   
@@ -82,76 +94,5 @@ class SendSmsQueueWorker extends QueueWorkerBase implements ContainerFactoryPlug
     $message = "The sunset at @destination_name is going to be great tonight! Don't miss it!";
     $message = $this->t($message,$replacements)
     return $message;
-  }
-  
-  /**
-   *  send a sms.
-   */
-  public function sendSms($user_destination_pair) {
-    //load user??  
-    $sendTo = $user_destination_pair->'uid'->field_mobile_phone->value;
-    // TODO: needs to be updated.
-    // if ($this->debug) {
-    //   \Drupal::logger('notify')->debug('This SMS notification was intended for @phone (Booking: @booking)', ['@phone' => $sendTo, '@booking' => $booking->id()]);
-    //   $sendTo = $this->keyRepository->getKey('dev_sms')->getKeyValue();
-    // }
-
-    // $replacements = [
-    //   '@destination_name' => 
-    // ];
-    // // Default SMS that can be overriden for a destination.
-    // $smsMessage = "The sunset at @destination_name is going to be great tonight";
-    // if (!$booking->field_room->entity->field_sms_message->isEmpty()) {
-    //   $smsMessage = $booking->field_room->entity->field_sms_message->value;
-    // }
-    // $message = $this->t($smsMessage, $replacements);
-
-    // Your Account SID and Auth Token from twilio.com/console.
-    $sid = $this->keyRepository->getKey('twilio_sid')->getKeyValue();
-    $token = $this->keyRepository->getKey('twilio_token')->getKeyValue();
-    $client = new Client($sid, $token);
-    $phone = $this->keyRepository->getKey('twilio_phone')->getKeyValue();
-    
-    // Send SMS.
-    // Capture response on non Prod.
-    $params = [
-      'from' => $phone,
-      'body' => $message,
-      //@Joel not sure what url to use
-      'statusCallback' => $this->keyRepository->getKey('postb_url')->getKeyValue(),
-    ];
-    //@Joel not sure what the 'dovneinn.env' equilivant is this 'sunset.test'
-    if (\Drupal::state()->get('doveinn.env') === 'production') {
-      //@Joel what is the twilio_webhook_token 
-      $token = $this->keyRepository->getKey('twilio_webhook_token')->getKeyValue();
-      $params['statusCallback'] = Url::fromRoute('notify.twilio_webhook', ['token' => $token], ['absolute' => TRUE])->toString();
-    }
-    try {
-      $sms = $client->messages->create($sendTo, $params);
-    }
-    catch (RestException $e) {
-      //need to match our log fromat??
-      \Drupal::logger('notify')->error('SMS sending issue with User: @user for Destination: @destination. @error status code.', ['@error' => $e->getStatusCode(), '@user' => $user_destination_pair->'uid'->name]);
-      return FALSE;
-    }
-    $details = [
-      'type' => 'sms',
-      'method' => $method,
-      'message' => $message,
-      'sid' => $sms->sid,
-    ];
-    $flagging = $user_destination_pair->'flagging'
-    $this->createNotification($flagging, $details);
-    return TRUE;
-  }
-
-  /**
-   * Create log node.
-   */
-  public function createNotification($flagging, $details) {
-    $storage = $this->entityTypeManager->getStorage('node');
-    $values = $this->prepareNotificationNode($flagging, $details);
-    $node = $storage->create($values);
-    $node->save();
   }
 }
