@@ -15,6 +15,7 @@ module:
   datetime: 0
   dblog: 0
   devel: 0
+  devel_php: 0
   dynamic_page_cache: 0
   editor: 0
   email_registration: 0
@@ -32,14 +33,17 @@ module:
   link: 0
   menu_ui: 0
   node: 0
+  notify_destination_followers: 0
   options: 0
   page_cache: 0
   path: 0
+  queue_ui: 0
   quickedit: 0
   rdf: 0
   search: 0
   shortcut: 0
   sunburst_api: 0
+  sunset_app: 0
   system: 0
   taxonomy: 0
   telephone: 0
@@ -47,6 +51,7 @@ module:
   toolbar: 0
   tour: 0
   update: 0
+  update_destinations: 0
   user: 0
   views_ui: 0
   menu_link_content: 1

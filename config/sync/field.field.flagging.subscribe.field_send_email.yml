@@ -1,0 +1,21 @@
+uuid: 0a3f6d5d-3a85-4e58-9b1f-bee48a252496
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.flagging.field_send_email
+    - flag.flag.subscribe
+id: flagging.subscribe.field_send_email
+field_name: field_send_email
+entity_type: flagging
+bundle: subscribe
+label: 'Send Email'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

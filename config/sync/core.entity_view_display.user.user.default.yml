@@ -9,6 +9,7 @@ dependencies:
     - image.style.thumbnail
   module:
     - image
+    - telephone
     - user
 _core:
   default_config_hash: V51QPCKkgNREKtSmB9Iu2wmAMEpktVpnzklWaZV8UYo
@@ -18,7 +19,7 @@ bundle: user
 mode: default
 content:
   field_email_alert_opt_out:
-    weight: 7
+    weight: 2
     label: above
     settings:
       format: default
@@ -28,14 +29,12 @@ content:
     type: boolean
     region: content
   field_mobile_phone:
-    weight: 6
+    weight: 1
     label: above
-    settings: {  }
+    settings:
+      title: ''
     third_party_settings: {  }
-    type: basic_string
-    region: content
-  member_for:
-    weight: 5
+    type: telephone_link
     region: content
   user_picture:
     type: image
@@ -46,4 +45,5 @@ content:
       image_link: content
     third_party_settings: {  }
     label: hidden
-hidden: {  }
+hidden:
+  member_for: true

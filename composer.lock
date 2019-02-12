@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "350ec080290fc281dd2fe14b4bc32255",
+    "content-hash": "f5c9bd0b32d982c120f81c7927fc94a7",
     "packages": [
         {
             "name": "alchemy/zippy",
@@ -2486,6 +2486,54 @@
                 "irc": "irc://irc.freenode.org/drupal-contribute"
             },
             "time": "2019-01-31T17:22:10+00:00"
+        },
+        {
+            "name": "drupal/devel_php",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupal.org/project/devel_php",
+                "reference": "8.x-1.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/devel_php-8.x-1.0.zip",
+                "reference": "8.x-1.0",
+                "shasum": "5c05cec807798fd60796bccbaab46733810b8201"
+            },
+            "require": {
+                "drupal/core": "~8.0",
+                "drupal/devel": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-1.0",
+                    "datestamp": "1548798480",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "lussoluca",
+                    "homepage": "https://www.drupal.org/user/138068"
+                }
+            ],
+            "description": "Re-add Execute PHP feature to Devel.",
+            "homepage": "https://www.drupal.org/project/devel_php",
+            "support": {
+                "source": "http://cgit.drupalcode.org/devel_php"
+            }
         },
         {
             "name": "drupal/email_registration",
@@ -5724,6 +5772,52 @@
             "time": "2019-01-14T14:59:29+00:00"
         },
         {
+            "name": "twilio/sdk",
+            "version": "5.28.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/twilio/twilio-php.git",
+                "reference": "d12afc8f14022b032a2f90f878534c63adc90e6c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/d12afc8f14022b032a2f90f878534c63adc90e6c",
+                "reference": "d12afc8f14022b032a2f90f878534c63adc90e6c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "apigen/apigen": "^4.1",
+                "phpunit/phpunit": "4.5.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Twilio\\": "Twilio/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Twilio API Team",
+                    "email": "api@twilio.com"
+                }
+            ],
+            "description": "A PHP wrapper for Twilio's API",
+            "homepage": "http://github.com/twilio/twilio-php",
+            "keywords": [
+                "api",
+                "sms",
+                "twilio"
+            ],
+            "time": "2019-01-12T01:01:52+00:00"
+        },
+        {
             "name": "typo3/phar-stream-wrapper",
             "version": "v2.0.1",
             "source": {
@@ -8297,17 +8391,6 @@
         {
             "name": "webflo/drupal-core-require-dev",
             "version": "8.6.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webflo/drupal-core-require-dev.git",
-                "reference": "c083ddd802bda504d836dc0d4fea44cf2e6f191f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webflo/drupal-core-require-dev/zipball/c083ddd802bda504d836dc0d4fea44cf2e6f191f",
-                "reference": "c083ddd802bda504d836dc0d4fea44cf2e6f191f",
-                "shasum": ""
-            },
             "require": {
                 "behat/mink": "1.7.x-dev",
                 "behat/mink-goutte-driver": "^1.2",

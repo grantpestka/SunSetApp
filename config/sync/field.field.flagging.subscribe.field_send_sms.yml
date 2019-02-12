@@ -1,0 +1,23 @@
+uuid: 90296000-afc3-4e76-91e2-3a9fecb20a53
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.flagging.field_send_sms
+    - flag.flag.subscribe
+id: flagging.subscribe.field_send_sms
+field_name: field_send_sms
+entity_type: flagging
+bundle: subscribe
+label: 'Send SMS'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

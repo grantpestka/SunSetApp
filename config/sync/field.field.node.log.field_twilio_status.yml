@@ -1,0 +1,19 @@
+uuid: 75e18ab8-760b-4cff-83f3-1d2af94603cf
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_twilio_status
+    - node.type.log
+id: node.log.field_twilio_status
+field_name: field_twilio_status
+entity_type: node
+bundle: log
+label: 'Twilio Status'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

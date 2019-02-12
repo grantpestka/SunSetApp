@@ -1,17 +1,18 @@
-uuid: d7e1836f-743b-4d5a-b1e2-e6dd3efbe38e
+uuid: 2c756bf2-e874-4c24-ab3c-0fdcad16679c
 langcode: en
 status: true
 dependencies:
   module:
-    - datetime
     - node
-id: node.field_sunset_last_updated
-field_name: field_sunset_last_updated
+id: node.field_twilio_sid
+field_name: field_twilio_sid
 entity_type: node
-type: datetime
+type: string
 settings:
-  datetime_type: datetime
-module: datetime
+  max_length: 255
+  is_ascii: false
+  case_sensitive: false
+module: core
 locked: false
 cardinality: 1
 translatable: true

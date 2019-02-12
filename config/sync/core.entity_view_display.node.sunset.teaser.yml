@@ -17,4 +17,11 @@ content:
     settings: {  }
     third_party_settings: {  }
     region: content
-hidden: {  }
+hidden:
+  field_region_sunmove: true
+  field_sunset_last_updated_sunset: true
+  field_sunset_quality_percent_sun: true
+  field_sunset_quality_sunset: true
+  field_sunset_quality_value_sun: true
+  field_sunset_temp_sunset: true
+  field_sunset_valid_at_sunset: true

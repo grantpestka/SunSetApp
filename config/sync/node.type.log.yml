@@ -1,0 +1,17 @@
+uuid: 0e58d245-ccc6-4b35-8407-44b1fd95c1c9
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+name: Log
+type: log
+description: ''
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: false

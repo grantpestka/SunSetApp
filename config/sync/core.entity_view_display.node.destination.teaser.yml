@@ -12,9 +12,22 @@ targetEntityType: node
 bundle: destination
 mode: teaser
 content:
+  flag_subscribe:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   links:
     weight: 100
     settings: {  }
     third_party_settings: {  }
     region: content
-hidden: {  }
+hidden:
+  field_latitude_longitude: true
+  field_region: true
+  field_sunset_last_updated: true
+  field_sunset_quality: true
+  field_sunset_quality_percent: true
+  field_sunset_quality_value: true
+  field_sunset_temp: true
+  field_sunset_valid_at: true

@@ -26,4 +26,6 @@ content:
     third_party_settings: {  }
     label: hidden
 hidden:
+  field_email_alert_opt_out: true
+  field_mobile_phone: true
   member_for: true

@@ -1,17 +1,16 @@
-uuid: d7e1836f-743b-4d5a-b1e2-e6dd3efbe38e
+uuid: fe910f5a-95cf-44b1-b204-57662ecc8728
 langcode: en
 status: true
 dependencies:
   module:
-    - datetime
     - node
-id: node.field_sunset_last_updated
-field_name: field_sunset_last_updated
+id: node.field_parent
+field_name: field_parent
 entity_type: node
-type: datetime
+type: entity_reference
 settings:
-  datetime_type: datetime
-module: datetime
+  target_type: node
+module: core
 locked: false
 cardinality: 1
 translatable: true

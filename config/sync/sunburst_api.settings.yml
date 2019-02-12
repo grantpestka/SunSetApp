@@ -1,0 +1,8 @@
+username: sunburst_username
+password: sunburst_password
+base_uri: 'https://sunburst.sunsetwx.com'
+submit: 'Save configuration'
+form_build_id: form-sR7H2I8bG2vSGC0Z7tNfJ70AbQ61MdvhX0As2OUHlqc
+form_token: wE3PF7GgpVBPgaYpB27mVc1Ej7EnJl3c4i39JwbzUlI
+form_id: sunburst_api_settings_form
+op: 'Save configuration'

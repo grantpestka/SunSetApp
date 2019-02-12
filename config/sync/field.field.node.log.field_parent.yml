@@ -1,0 +1,33 @@
+uuid: 926f2068-7b8c-473d-bbc2-28025785d059
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_parent
+    - node.type.destination
+    - node.type.log
+    - node.type.region
+    - node.type.sunset
+id: node.log.field_parent
+field_name: field_parent
+entity_type: node
+bundle: log
+label: Parent
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      destination: destination
+      log: log
+      region: region
+      sunset: sunset
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: destination
+field_type: entity_reference

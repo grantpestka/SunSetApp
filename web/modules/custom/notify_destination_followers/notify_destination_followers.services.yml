@@ -1,0 +1,4 @@
+services:
+  notify_destination_followers.sms_utility:
+    class: Drupal\notify_destination_followers\Utility\SmsUtility
+    arguments: ['@key.repository', '@entity_type.manager']
