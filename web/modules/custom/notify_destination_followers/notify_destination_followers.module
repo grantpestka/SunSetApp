@@ -50,7 +50,7 @@ function notify_destination_followers_cron() {
   $destinations = $storage->getQuery()
       ->condition('type', 'destination')
       ->condition('status', 1)
-      // ->condition('field_threshold', '80', '>=')
+      //TODO: ->condition('field_threshold', '80', '>=')
       ->execute();
 
   foreach ($destinations as $destination) {

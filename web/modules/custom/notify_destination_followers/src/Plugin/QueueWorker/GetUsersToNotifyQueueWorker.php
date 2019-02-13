@@ -66,15 +66,12 @@ class GetUsersToNotifyQueueWorker extends QueueWorkerBase implements ContainerFa
     if (!$flaggings = $this->getDestinationFlags($destinationId)) {
       return;
     }
-    $queue_id = 'send_sms_queue_worker';
+    $queue_id = 'send_sms_quality_queue_worker';
     $queue = \Drupal::queue($queue_id);
-    $user_destination_flagging = [];
     foreach ($flaggings as $flagging) {
-      $user_destination_flagging['uid'] = $flagging->uid->value;
-      $user_destination_flagging['destination_id'] = $flagging->entity_id->value;
-      $user_destination_flagging['flagging'] = $flagging;
+      
       // TODO: Check the log before adding to queue.
-      $queue->createItem($user_destination_flagging);
+      $queue->createItem($flagging);
     }
   }
 

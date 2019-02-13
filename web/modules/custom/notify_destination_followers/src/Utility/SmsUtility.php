@@ -19,7 +19,7 @@ use Drupal\Core\Url;
  */
 class SmsUtility {
   private $debug = FALSE;
-  //@Joel this sorting will happen sooner in the process for sunset right?
+  //TODO: @Joel this sorting will happen sooner in the process for sunset right?
   //   private $validStatuses = ['PAID', 'CSM'];
   /**
    * Drupal\key\KeyRepository definition.
@@ -55,14 +55,18 @@ class SmsUtility {
 
    /**
    *  send a sms.
+   * 
+   * @param int $uid
+   *   A drupal user id.
+   * 
+   * @return mixed
    */
-  // public function sendSms($uid, $message, $entityType, $parentId) 
   public function sendSms($uid, $message) {
 
     //TODOS:
-    // Add logging
-    // Call this service from the correct queue worker.
-    
+    // 2. Add logging
+    // 1. Call this service from the correct queue worker.
+
     if (!$sendTo = $this->getUserPhone($uid)) {
       // TODO: Log here!
       return FALSE;
@@ -78,7 +82,7 @@ class SmsUtility {
       //@Joel not sure what url to use
       // 'statusCallback' => $this->keyRepository->getKey('postb_url')->getKeyValue(),
     ];
-    //Sends SMS if in production
+    //TODO: Sends SMS if in production
     //@Joel not sure what the 'dovneinn.env' equilivant is this 'sunset.test'
     // if (\Drupal::state()->get('doveinn.env') === 'production') {
     //   //@Joel what is the twilio_webhook_token 
@@ -94,27 +98,19 @@ class SmsUtility {
       return FALSE;
     }
 
+    //TODO: logging
     if ($this->debug) {
       \Drupal::logger('notify')->debug('This SMS notification was intended for @phone (User: @userName)', ['@phone' => $sendTo, '@userName' => $userName]);
       $sendTo = $this->keyRepository->getKey('dev_sms')->getKeyValue();
     }
 
-    // $details = [
-    //   'type' => 'sms',
-    //   'method' => $method,
-    //   'message' => $message,
-    //   'sid' => $sms->sid,
-    // ];
-    // $parent = $log_parent;
-    // $this->createLog($parent, $details);
-    // return TRUE;
   }
 
   /**
    * Gets a users phone number.
    * 
    * @param int $uid
-   *   A drrupal user id.
+   *   A drupal user id.
    * 
    * @return mixed
    *   FALSE or a valid phone number.
@@ -132,6 +128,8 @@ class SmsUtility {
 
   /**
    * Create log node.
+   * 
+   * TODO: this is prob broken
    */
   public function createLog($parent, $details) {
     $storage = $this->entityTypeManager->getStorage('node');
